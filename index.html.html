@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProsthDent CRM</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B1F3A;--navy-mid:#162D52;--navy-light:#1E3D6E;
+  --gold:#C9A84C;--gold-light:#E8C97A;--gold-pale:#FBF6E9;
+  --white:#FFFFFF;--off-white:#F7F6F3;
+  --gray-50:#F2F1EE;--gray-100:#E4E2DC;--gray-200:#C8C5BC;
+  --gray-400:#8E8B82;--gray-600:#5A5750;--gray-800:#2E2C28;
+  --green:#1A6B3C;--green-bg:#EAF5EF;
+  --amber:#7A4F00;--amber-bg:#FDF3DC;
+  --blue:#0F4C8A;--blue-bg:#EBF3FC;
+  --red:#8B1A1A;--red-bg:#FCEAEA;
+  --purple:#4A2D8A;--purple-bg:#F0ECFC;
+  --radius:6px;--radius-lg:10px;
+  --shadow:0 1px 3px rgba(11,31,58,0.08),0 1px 2px rgba(11,31,58,0.04);
+  --shadow-md:0 4px 16px rgba(11,31,58,0.12);
+}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--off-white);color:var(--gray-800);font-size:14px;line-height:1.5;min-height:100vh}
+.app{max-width:1000px;margin:0 auto;background:var(--white);min-height:100vh;box-shadow:var(--shadow-md)}
+.nav{background:var(--navy);padding:0 20px;display:flex;align-items:center;gap:12px;height:58px;position:sticky;top:0;z-index:50}
+.nav-icon{width:34px;height:34px;background:var(--gold);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;color:var(--navy);flex-shrink:0;letter-spacing:-0.5px}
+.nav-info{flex:1}
+.nav-name{font-size:15px;font-weight:600;color:var(--white);letter-spacing:0.01em}
+.nav-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px}
+.nav-btn{padding:7px 14px;font-size:12px;font-weight:500;border-radius:var(--radius);border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:inherit;transition:opacity .15s}
+.nbtn-outline{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.18)}
+.nbtn-outline:hover{background:rgba(255,255,255,0.18)}
+.nbtn-gold{background:var(--gold);color:var(--navy);font-weight:700}
+.nbtn-gold:hover{opacity:.9}
+.tab-bar{background:var(--navy-mid);padding:0 20px;display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,0.07);overflow-x:auto}
+.tab{padding:13px 16px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.45);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;align-items:center;gap:6px;letter-spacing:0.02em;transition:color .15s;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit}
+.tab:hover{color:rgba(255,255,255,0.75)}
+.tab.active{color:var(--gold-light);border-bottom-color:var(--gold)}
+.tbadge{background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:8px;font-weight:700;display:none;margin-left:2px}
+.panel{display:none;padding:20px}
+.panel.active{display:block}
+.metrics{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+@media(max-width:700px){.metrics{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:420px){.metrics{grid-template-columns:repeat(2,1fr)}}
+.metric{background:var(--gray-50);border:1px solid var(--gray-100);border-radius:var(--radius-lg);padding:13px 14px}
+.metric-lbl{font-size:10px;font-weight:600;color:var(--gray-400);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.metric-val{font-size:22px;font-weight:700;line-height:1;color:var(--gray-800)}
+.mv-blue{color:var(--blue)}.mv-green{color:var(--green)}.mv-amber{color:var(--amber)}.mv-red{color:var(--red)}.mv-gold{color:#9A7120;font-size:17px}
+.card-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:600px){.card-row{grid-template-columns:1fr}}
+.card{background:var(--white);border:1px solid var(--gray-100);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow)}
+.card-ttl{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px}
+.bar-item{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.bar-lbl{font-size:11px;color:var(--gray-600);width:105px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{flex:1;height:6px;background:var(--gray-100);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.bar-n{font-size:11px;font-weight:600;color:var(--gray-400);width:18px;text-align:right}
+.stage-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;padding:6px 8px;border-radius:var(--radius);background:var(--gray-50)}
+.stage-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.stage-lbl{font-size:12px;color:var(--gray-600);flex:1}
+.stage-n{font-size:13px;font-weight:700;color:var(--gray-800)}
+.stage-v{font-size:11px;color:var(--gray-400);margin-left:6px}
+.alert-amber{background:var(--amber-bg);border-left:3px solid var(--gold);border-radius:var(--radius-lg);padding:12px 15px;margin-bottom:14px}
+.alert-ttl{font-size:12px;font-weight:700;color:var(--amber);margin-bottom:8px}
+.alert-item{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(122,79,0,.1);cursor:pointer}
+.alert-item:last-child{border-bottom:none}
+.recent-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--gray-100);cursor:pointer;border-radius:4px;transition:background .1s}
+.recent-item:last-child{border-bottom:none}
+.recent-item:hover{background:var(--gray-50);margin:0 -16px;padding:9px 16px}
+.avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.av-d{background:var(--blue-bg);color:var(--blue)}
+.av-r{background:var(--purple-bg);color:var(--purple)}
+.av-p{background:var(--green-bg);color:var(--green)}
+.badge{display:inline-flex;align-items:center;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.02em;white-space:nowrap}
+.bg-new{background:var(--blue-bg);color:var(--blue)}
+.bg-contacted{background:var(--amber-bg);color:var(--amber)}
+.bg-scheduled{background:var(--green-bg);color:var(--green)}
+.bg-converted{background:#EAF5EF;color:#1A6B3C}
+.bg-lost{background:var(--gray-50);color:var(--gray-400);border:1px solid var(--gray-100)}
+.src-pill{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:4px;background:var(--gray-50);color:var(--gray-600);border:1px solid var(--gray-100)}
+.toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.toolbar input,.toolbar select{padding:8px 11px;font-size:12px;border-radius:var(--radius);border:1px solid var(--gray-200);background:var(--white);color:var(--gray-800);font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+.toolbar input{flex:1;min-width:150px}
+.toolbar input:focus,.toolbar select:focus{border-color:var(--navy-light);box-shadow:0 0 0 2px rgba(30,61,110,0.12)}
+.table-wrap{overflow-x:auto;border:1px solid var(--gray-100);border-radius:var(--radius-lg)}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:620px}
+thead{background:var(--gray-50);border-bottom:1px solid var(--gray-100)}
+th{text-align:left;font-weight:700;font-size:10px;color:var(--gray-400);padding:10px 12px;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--gray-100);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:var(--gray-50)}
+.td-name{font-weight:600;cursor:pointer;color:var(--navy)}
+.td-name:hover{text-decoration:underline;text-underline-offset:2px}
+.od-chk{accent-color:var(--navy);width:14px;height:14px;cursor:pointer}
+.act-btn{width:28px;height:28px;border-radius:var(--radius);border:1px solid var(--gray-200);background:var(--white);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:13px;color:var(--gray-600);transition:background .1s,color .1s;margin-right:2px;font-family:inherit}
+.act-btn:hover{background:var(--gray-50);border-color:var(--gray-400)}
+.act-btn-red:hover{background:var(--red-bg);border-color:var(--red);color:var(--red)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(11,31,58,.45);z-index:200;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.overlay.open{display:flex}
+.modal{background:var(--white);border-radius:var(--radius-lg);padding:22px;width:540px;max-width:100%;box-shadow:var(--shadow-md);margin:auto}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--gray-100)}
+.modal-title{font-size:16px;font-weight:700;color:var(--navy)}
+.close-btn{width:28px;height:28px;border-radius:var(--radius);border:1px solid var(--gray-200);background:none;cursor:pointer;font-size:16px;color:var(--gray-400);display:flex;align-items:center;justify-content:center;font-family:inherit}
+.close-btn:hover{background:var(--gray-50);color:var(--gray-800)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:480px){.form-grid{grid-template-columns:1fr}}
+.span2{grid-column:1/-1}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em}
+.field input,.field select,.field textarea{padding:8px 10px;font-size:13px;border-radius:var(--radius);border:1px solid var(--gray-200);background:var(--white);color:var(--gray-800);font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--navy-light);box-shadow:0 0 0 2px rgba(30,61,110,0.12)}
+.field textarea{resize:vertical;min-height:60px}
+.chk-row{display:flex;align-items:center;gap:8px}
+.chk-row input[type=checkbox]{width:15px;height:15px;accent-color:var(--navy);flex-shrink:0;cursor:pointer}
+.chk-row label{font-size:13px;color:var(--gray-800);cursor:pointer;font-weight:400}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid var(--gray-100);flex-wrap:wrap}
+.btn{padding:8px 16px;font-size:13px;font-weight:500;border-radius:var(--radius);border:1px solid var(--gray-200);background:var(--white);color:var(--gray-800);cursor:pointer;display:inline-flex;align-items:center;gap:5px;font-family:inherit;transition:background .12s;letter-spacing:.01em}
+.btn:hover{background:var(--gray-50)}
+.btn-primary{background:var(--navy);color:var(--white);border-color:var(--navy);font-weight:600}
+.btn-primary:hover{background:var(--navy-light)}
+.btn-sm{padding:5px 10px;font-size:11px}
+.btn-danger{color:var(--red);border-color:var(--gray-200)}
+.btn-danger:hover{background:var(--red-bg);border-color:var(--red)}
+.inner-tabs{display:flex;border-bottom:1px solid var(--gray-100);margin-bottom:16px}
+.inner-tab{padding:8px 14px;font-size:12px;font-weight:500;color:var(--gray-400);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;transition:color .15s}
+.inner-tab:hover{color:var(--gray-800)}
+.inner-tab.active{color:var(--navy);border-bottom-color:var(--navy);font-weight:700}
+.note-row{padding:8px 0;border-bottom:1px solid var(--gray-100)}
+.note-row:last-child{border-bottom:none}
+.note-ts{font-size:10px;color:var(--gray-400);margin-bottom:2px;font-weight:600}
+.note-text{font-size:13px;color:var(--gray-600)}
+.note-add{display:flex;gap:7px;margin-bottom:12px}
+.note-add input{flex:1;padding:8px 10px;font-size:12px;border-radius:var(--radius);border:1px solid var(--gray-200);background:var(--white);color:var(--gray-800);font-family:inherit;outline:none}
+.note-add input:focus{border-color:var(--navy-light);box-shadow:0 0 0 2px rgba(30,61,110,0.12)}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin-bottom:14px}
+.dl{font-size:10px;font-weight:700;color:var(--gray-400);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.dv{font-size:13px;color:var(--gray-800)}
+.status-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.setup-section{background:var(--white);border:1px solid var(--gray-100);border-radius:var(--radius-lg);padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+.setup-title{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.setup-sub{font-size:12px;color:var(--gray-600);line-height:1.7;margin-bottom:10px}
+.code-box{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius);padding:10px 12px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;color:var(--gray-600);word-break:break-all;margin:8px 0}
+.step-list{font-size:12px;color:var(--gray-600);line-height:1.6;list-style:none;counter-reset:step;margin-top:8px}
+.step-list li{counter-increment:step;display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
+.step-list li::before{content:counter(step);min-width:20px;height:20px;background:var(--navy);color:var(--white);border-radius:50%;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.val-row{display:flex;align-items:center;gap:10px;margin-bottom:7px;padding:7px 9px;background:var(--gray-50);border-radius:var(--radius);border:1px solid var(--gray-100)}
+.val-lbl{font-size:12px;color:var(--gray-600);flex:1}
+.val-input{width:90px;padding:5px 8px;font-size:12px;border-radius:var(--radius);border:1px solid var(--gray-200);background:var(--white);color:var(--gray-800);font-family:inherit;text-align:right;outline:none}
+.val-input:focus{border-color:var(--navy-light)}
+.empty-state{text-align:center;padding:36px 20px;color:var(--gray-400)}
+.r-block{margin-bottom:14px}
+.r-block-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.r-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--white);border:1px solid var(--gray-100);border-radius:var(--radius);margin-bottom:6px;cursor:pointer;transition:box-shadow .15s}
+.r-item:hover{box-shadow:var(--shadow)}
+</style>
+</head>
+<body>
+<div class="app">
+<nav class="nav">
+  <div class="nav-icon">P</div>
+  <div class="nav-info">
+    <div class="nav-name">ProsthDent CRM</div>
+    <div class="nav-sub">Magnolia, TX &middot; Dr. Ren&eacute; Gonz&aacute;lez</div>
+  </div>
+  <button class="nav-btn nbtn-outline" onclick="exportCSV()">&#11015; Export CSV</button>
+  <button class="nav-btn nbtn-gold" onclick="openAdd()">&#43; Add lead</button>
+</nav>
+<div class="tab-bar">
+  <button class="tab active" onclick="showTab('dashboard',this)">&#9632; Dashboard</button>
+  <button class="tab" onclick="showTab('leads',this)">&#128101; All leads</button>
+  <button class="tab" onclick="showTab('reminders',this)">&#128276; Reminders <span class="tbadge" id="reminder-badge"></span></button>
+  <button class="tab" onclick="showTab('setup',this)">&#9881; Setup</button>
+</div>
+<div id="tab-dashboard" class="panel active">
+  <div class="metrics" id="metrics"></div>
+  <div id="dash-alert"></div>
+  <div class="card-row">
+    <div class="card"><div class="card-ttl">Leads by source</div><div id="source-chart"></div></div>
+    <div class="card"><div class="card-ttl">Pipeline by stage</div><div id="stage-chart"></div></div>
+  </div>
+  <div class="card"><div class="card-ttl">Recent activity</div><div id="recent-list"></div></div>
+</div>
+<div id="tab-leads" class="panel">
+  <div class="toolbar">
+    <input type="text" id="search-input" placeholder="Search by name, phone, or email&hellip;" oninput="renderTable()">
+    <select id="filter-status" onchange="renderTable()"><option value="">All statuses</option><option>New</option><option>Contacted</option><option>Appointment scheduled</option><option>Converted</option><option>Lost</option></select>
+    <select id="filter-source" onchange="renderTable()"><option value="">All sources</option><option>Facebook Lead Ads</option><option>Instagram Lead Ads</option><option>Website form</option><option>Google Ads</option><option>Google / call</option><option>Doctor referral</option><option>Patient referral</option><option>Other</option></select>
+    <select id="filter-od" onchange="renderTable()"><option value="">All</option><option value="no">Not in Open Dental</option><option value="yes">In Open Dental</option></select>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th style="width:16%">Name</th><th style="width:13%">Phone</th><th style="width:13%">Source</th>
+        <th style="width:14%">Treatment</th><th style="width:12%">Status</th><th style="width:9%">Value</th>
+        <th style="width:6%">OD</th><th style="width:5%">&#128276;</th><th style="width:12%">Actions</th>
+      </tr></thead>
+      <tbody id="leads-body"></tbody>
+    </table>
+  </div>
+  <div id="empty-state" class="empty-state" style="display:none"><div style="font-size:32px;margin-bottom:8px">&#128101;</div><div style="font-size:14px;font-weight:600;color:var(--gray-600);margin-bottom:4px">No leads match your filters</div><div style="font-size:12px">Try adjusting your search or filters above</div></div>
+</div>
+<div id="tab-reminders" class="panel"><div id="reminders-panel"></div></div>
+<div id="tab-setup" class="panel">
+  <div class="setup-section">
+    <div class="setup-title">Zapier automation &mdash; connect your lead sources</div>
+    <div class="setup-sub">Once configured, leads from Facebook, Instagram, Google Ads, and your website form will appear here automatically. Give Zapier this webhook URL:</div>
+    <div class="code-box">https://prosthdent-crm.netlify.app/api/leads</div>
+    <div class="setup-sub"><strong style="color:var(--navy)">Fields Zapier should send:</strong> <code>fname</code>, <code>lname</code>, <code>phone</code>, <code>email</code>, <code>source</code>, <code>treatment</code>, <code>notes</code></div>
+    <div class="card-ttl" style="margin-top:14px">Step-by-step</div>
+    <ol class="step-list">
+      <li><span>Go to <strong>zapier.com</strong> &rarr; Create Zap</span></li>
+      <li><span>Trigger: <strong>Facebook Lead Ads</strong> &rarr; &ldquo;New Lead&rdquo; &rarr; select your ProsthDent ad account</span></li>
+      <li><span>Action: <strong>Webhooks by Zapier</strong> &rarr; POST &rarr; paste the URL above</span></li>
+      <li><span>Map fields: First Name &rarr; fname, Last Name &rarr; lname, Phone &rarr; phone, Email &rarr; email. Set source to &ldquo;Facebook Lead Ads&rdquo; as a static value.</span></li>
+      <li><span>Test &amp; turn on. Repeat for Instagram Lead Ads, Google Ads, and your website form.</span></li>
+    </ol>
+  </div>
+  <div class="setup-section">
+    <div class="setup-title">Treatment value estimates</div>
+    <div class="setup-sub">Used for pipeline value calculations on the dashboard. Update these to match your actual pricing.</div>
+    <div id="value-config"></div>
+  </div>
+</div>
+</div>
+
+<div class="overlay" id="add-modal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title" id="modal-title-text">New lead</div><button class="close-btn" onclick="closeModal()">&#10005;</button></div>
+    <div class="form-grid">
+      <div class="field"><label>First name *</label><input id="f-fname" placeholder="Maria"></div>
+      <div class="field"><label>Last name</label><input id="f-lname" placeholder="Lopez"></div>
+      <div class="field"><label>Phone</label><input id="f-phone" placeholder="(281) 555-0100"></div>
+      <div class="field"><label>Email</label><input id="f-email" type="email" placeholder="maria@email.com"></div>
+      <div class="field"><label>Lead source</label><select id="f-source"><option>Facebook Lead Ads</option><option>Instagram Lead Ads</option><option>Website form</option><option>Google Ads</option><option>Google / call</option><option>Doctor referral</option><option>Patient referral</option><option>Other</option></select></div>
+      <div class="field"><label>Status</label><select id="f-status"><option>New</option><option>Contacted</option><option>Appointment scheduled</option><option>Converted</option><option>Lost</option></select></div>
+      <div class="field span2"><label>Treatment interest</label><select id="f-treatment" onchange="autoFillValue()"><option>Dental implants</option><option>Full mouth rehabilitation</option><option>All-on-X</option><option>Crowns &amp; bridges</option><option>Dentures</option><option>Implant-retained dentures</option><option>Cosmetic / veneers</option><option>Teeth whitening</option><option>General / exam</option><option>Other</option></select></div>
+      <div class="field"><label>Estimated value ($)</label><input id="f-value" type="number" placeholder="4500"></div>
+      <div class="field"><label>Referred by</label><input id="f-referrer" placeholder="Dr. Smith or patient name"></div>
+      <div class="field"><label>Follow-up date</label><input id="f-followup" type="date"></div>
+      <div class="field span2"><label>Follow-up note</label><input id="f-followup-note" placeholder="What to discuss on follow-up call&hellip;"></div>
+      <div class="span2 chk-row" style="margin-top:4px"><input type="checkbox" id="f-od"><label for="f-od">Entered in Open Dental</label></div>
+      <div class="field span2"><label>Notes</label><textarea id="f-notes" placeholder="Insurance, urgency, specific concerns, call outcome&hellip;"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveLead()">Save lead</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="detail-modal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title" id="detail-name"></div><button class="close-btn" onclick="closeDetail()">&#10005;</button></div>
+    <div class="inner-tabs"><button class="inner-tab active" onclick="showDetailTab('overview',this)">Overview</button><button class="inner-tab" onclick="showDetailTab('activity',this)">Activity log</button><button class="inner-tab" onclick="showDetailTab('reminder',this)">Follow-up</button></div>
+    <div id="detail-overview"></div>
+    <div id="detail-activity" style="display:none"></div>
+    <div id="detail-reminder" style="display:none"></div>
+    <div class="modal-footer"><button class="btn btn-danger btn-sm" onclick="deleteFromDetail()">Delete lead</button><button class="btn" onclick="closeDetail()">Close</button><button class="btn btn-primary" onclick="editFromDetail()">Edit lead</button></div>
+  </div>
+</div>
+
+<script>
+const SKEY='prosthdent_crm_v3';
+const SCOL={'Facebook Lead Ads':'#1877F2','Instagram Lead Ads':'#C13584','Website form':'#0F4C8A','Google Ads':'#EA4335','Google / call':'#EA4335','Doctor referral':'#4A2D8A','Patient referral':'#1A6B3C','Other':'#8E8B82'};
+const SCLS={'New':'bg-new','Contacted':'bg-contacted','Appointment scheduled':'bg-scheduled','Converted':'bg-converted','Lost':'bg-lost'};
+const SCOL2={'New':'#0F4C8A','Contacted':'#7A4F00','Appointment scheduled':'#1A6B3C','Converted':'#1A6B3C','Lost':'#8E8B82'};
+const DVAL={'Dental implants':4500,'Full mouth rehabilitation':18000,'All-on-X':22000,'Crowns & bridges':2800,'Dentures':3200,'Implant-retained dentures':9000,'Cosmetic / veneers':6000,'Teeth whitening':600,'General / exam':250,'Other':1500};
+let leads=[],vals={...DVAL},editId=null,detailId=null;
+function load(){try{const r=localStorage.getItem(SKEY);if(r){const d=JSON.parse(r);leads=d.leads||[];vals=d.vals||{...DVAL};}else leads=samples();}catch(e){leads=samples();}render();}
+function save(){try{localStorage.setItem(SKEY,JSON.stringify({leads,vals}));}catch(e){}}
+function samples(){const d=n=>{const x=new Date();x.setDate(x.getDate()-n);return x.toISOString().split('T')[0];};const fu=n=>{const x=new Date();x.setDate(x.getDate()+n);return x.toISOString().split('T')[0];};return[{id:1,fname:'Sandra',lname:'Reyes',phone:'(281) 445-0172',email:'sandra.r@gmail.com',source:'Facebook Lead Ads',treatment:'Dental implants',status:'Appointment scheduled',value:4500,referrer:'',followup:fu(1),followupNote:'Confirm appointment time',od:false,notes:'Missing two upper teeth. Insurance TBD.',date:d(2),log:[{ts:d(2)+' 9:00 AM',text:'Lead received from Facebook Lead Ads'},{ts:d(1)+' 10:30 AM',text:'Called — booked for consult Thursday'}]},{id:2,fname:'Carlos',lname:'Mendez',phone:'(832) 510-9900',email:'carlosm@email.com',source:'Doctor referral',treatment:'All-on-X',status:'Contacted',value:22000,referrer:'Dr. Patricia Ruiz',followup:fu(0),followupNote:'Send treatment plan PDF',od:false,notes:'Full arch. Very motivated patient.',date:d(4),log:[{ts:d(4)+' 2:00 PM',text:'Referred by Dr. Ruiz'},{ts:d(3)+' 11:00 AM',text:'Initial call completed'}]},{id:3,fname:'Jennifer',lname:'Walsh',phone:'(936) 288-0040',email:'',source:'Google / call',treatment:'Crowns & bridges',status:'New',value:2800,referrer:'',followup:'',followupNote:'',od:false,notes:'Called for pricing info.',date:d(0),log:[{ts:d(0)+' 8:45 AM',text:'Inbound call — left voicemail'}]},{id:4,fname:'Miguel',lname:'Torres',phone:'(281) 600-3311',email:'m.torres@outlook.com',source:'Instagram Lead Ads',treatment:'Cosmetic / veneers',status:'Converted',value:6000,referrer:'',followup:'',followupNote:'',od:true,notes:'Deposit paid.',date:d(9),log:[{ts:d(9)+' 12:00 PM',text:'Lead from Instagram Lead Ads'},{ts:d(6)+' 3:00 PM',text:'Accepted treatment plan — deposit received'}]},{id:5,fname:'Linda',lname:'Park',phone:'(832) 770-4428',email:'lindapark@yahoo.com',source:'Website form',treatment:'Dentures',status:'New',value:3200,referrer:'',followup:fu(-1),followupNote:'No response yet — follow up again',od:false,notes:'Submitted Sunday night.',date:d(1),log:[{ts:d(1)+' 10:10 PM',text:'Website form submitted'}]},{id:6,fname:'Robert',lname:'Chavez',phone:'(281) 901-2200',email:'rchavez@gmail.com',source:'Patient referral',treatment:'Full mouth rehabilitation',status:'Contacted',value:18000,referrer:'Maria Torres',followup:fu(3),followupNote:'Second call — discuss financing options',od:false,notes:'Complex case. Interested in CareCredit.',date:d(6),log:[{ts:d(6)+' 1:00 PM',text:'Referred by existing patient Maria Torres'},{ts:d(5)+' 10:00 AM',text:'First call completed — very interested'}]}];}
+const today=()=>new Date().toISOString().split('T')[0];
+const fmt$=n=>'$'+Math.round(n||0).toLocaleString();
+const isOv=d=>d&&d<today();const isDT=d=>d===today();const isSn=d=>{if(!d)return false;const diff=(new Date(d)-new Date(today()))/86400000;return diff>=0&&diff<=2;};
+const avC=s=>s.includes('Doctor')?'av-r':s.includes('Patient')?'av-p':'av-d';
+const ini=l=>(l.fname[0]||'')+(l.lname[0]||'');
+function render(){renderDashboard();renderTable();renderReminders();renderSetup();updateBadge();}
+function updateBadge(){const n=leads.filter(l=>l.followup&&(isOv(l.followup)||isDT(l.followup))&&l.status!=='Converted'&&l.status!=='Lost').length;const b=document.getElementById('reminder-badge');if(n){b.textContent=n;b.style.display='inline';}else b.style.display='none';}
+function renderDashboard(){
+  const total=leads.length,conv=leads.filter(l=>l.status==='Converted').length,nw=leads.filter(l=>(new Date()-new Date(l.date))<7*86400000).length,rate=total?Math.round(conv/total*100):0,pipe=leads.filter(l=>l.status!=='Lost'&&l.status!=='Converted').reduce((s,l)=>s+(l.value||0),0),pOD=leads.filter(l=>!l.od&&l.status!=='Lost'&&l.status!=='Converted').length;
+  document.getElementById('metrics').innerHTML=`<div class="metric"><div class="metric-lbl">Total leads</div><div class="metric-val">${total}</div></div><div class="metric"><div class="metric-lbl">New this week</div><div class="metric-val mv-blue">${nw}</div></div><div class="metric"><div class="metric-lbl">Converted</div><div class="metric-val mv-green">${conv}</div></div><div class="metric"><div class="metric-lbl">Conversion</div><div class="metric-val mv-amber">${rate}%</div></div><div class="metric"><div class="metric-lbl">Pipeline value</div><div class="metric-val mv-gold">${fmt$(pipe)}</div></div><div class="metric"><div class="metric-lbl">Pending OD entry</div><div class="metric-val ${pOD?'mv-red':''}">${pOD}</div></div>`;
+  const ov=leads.filter(l=>l.followup&&(isOv(l.followup)||isDT(l.followup))&&l.status!=='Converted'&&l.status!=='Lost');
+  document.getElementById('dash-alert').innerHTML=ov.length?`<div class="alert-amber"><div class="alert-ttl">&#128276; ${ov.length} follow-up${ov.length>1?'s':''} need attention today</div>${ov.map(l=>`<div class="alert-item" onclick="openDetail(${l.id})"><strong style="font-size:12px">${l.fname} ${l.lname}</strong><span style="flex:1;font-size:11px;margin-left:6px">${l.followupNote||'Follow up'}</span><span style="font-size:10px;font-weight:700">${isOv(l.followup)?'OVERDUE':'TODAY'}</span></div>`).join('')}</div>`:'';
+  const sc={};leads.forEach(l=>{sc[l.source]=(sc[l.source]||0)+1;});const mx=Math.max(...Object.values(sc),1);
+  document.getElementById('source-chart').innerHTML=Object.entries(sc).sort((a,b)=>b[1]-a[1]).map(([s,c])=>`<div class="bar-item"><span class="bar-lbl" title="${s}">${s}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(c/mx*100)}%;background:${SCOL[s]||'#8E8B82'}"></div></div><span class="bar-n">${c}</span></div>`).join('')||'<div style="font-size:12px;color:var(--gray-400)">No leads yet</div>';
+  const stgs=['New','Contacted','Appointment scheduled','Converted','Lost'];
+  document.getElementById('stage-chart').innerHTML=stgs.map(s=>{const sl=leads.filter(l=>l.status===s),val=sl.reduce((sum,l)=>sum+(l.value||0),0);return`<div class="stage-row"><div class="stage-dot" style="background:${SCOL2[s]}"></div><span class="stage-lbl">${s}</span><span class="stage-n">${sl.length}</span>${val>0?`<span class="stage-v">${fmt$(val)}</span>`:''}</div>`;}).join('');
+  const rec=[...leads].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,6);
+  document.getElementById('recent-list').innerHTML=rec.length?rec.map(l=>`<div class="recent-item" onclick="openDetail(${l.id})"><div class="avatar ${avC(l.source)}">${ini(l)}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--navy)">${l.fname} ${l.lname}</div><div style="font-size:11px;color:var(--gray-400)">${l.source} &middot; ${l.treatment}</div></div>${l.followup&&(isOv(l.followup)||isDT(l.followup))?'<span>&#128276;</span>':''}<span class="badge ${SCLS[l.status]||''}">${l.status}</span></div>`).join(''):'<div class="empty-state"><div style="font-size:28px;margin-bottom:6px">&#128101;</div><div style="font-size:13px;font-weight:600;color:var(--gray-600);margin-bottom:3px">No leads yet</div><div style="font-size:12px">Click &ldquo;Add lead&rdquo; to get started</div></div>';
+}
+function renderTable(){
+  const q=(document.getElementById('search-input')||{}).value||'',fs=(document.getElementById('filter-status')||{}).value||'',fsc=(document.getElementById('filter-source')||{}).value||'',fod=(document.getElementById('filter-od')||{}).value||'';
+  const filtered=leads.filter(l=>{const m=`${l.fname} ${l.lname} ${l.phone} ${l.email}`.toLowerCase().includes(q.toLowerCase());return m&&(!fs||l.status===fs)&&(!fsc||l.source===fsc)&&(!fod||(fod==='yes'?l.od:!l.od));}).sort((a,b)=>b.date.localeCompare(a.date));
+  const body=document.getElementById('leads-body'),empty=document.getElementById('empty-state');if(!body)return;
+  if(!filtered.length){body.innerHTML='';empty.style.display='block';return;}empty.style.display='none';
+  body.innerHTML=filtered.map(l=>{const ov=isOv(l.followup)&&l.status!=='Converted'&&l.status!=='Lost',sn=isSn(l.followup)&&!ov&&l.status!=='Converted'&&l.status!=='Lost',sp=l.source.replace(' Lead Ads','').replace(' / call','').replace(' Ads','');return`<tr><td class="td-name" onclick="openDetail(${l.id})">${l.fname} ${l.lname}</td><td style="color:var(--gray-600)">${l.phone||'&mdash;'}</td><td><span class="src-pill">${sp}</span></td><td style="color:var(--gray-600);font-size:11px">${l.treatment}</td><td><span class="badge ${SCLS[l.status]||''}">${l.status}</span></td><td style="font-weight:700;color:var(--navy)">${l.value?fmt$(l.value):'&mdash;'}</td><td><input type="checkbox" class="od-chk" ${l.od?'checked':''} onchange="toggleOD(${l.id},this.checked)" title="Entered in Open Dental"></td><td style="text-align:center">${ov?'<span title="Overdue" style="color:var(--red)">&#128276;</span>':sn?'<span title="Due soon" style="opacity:0.7;color:var(--amber)">&#128276;</span>':l.followup?'<span title="Scheduled" style="font-size:11px;color:var(--gray-400)">&#128337;</span>':'&mdash;'}</td><td><button class="act-btn" onclick="openDetail(${l.id})" title="View">&#128065;</button><button class="act-btn" onclick="openEdit(${l.id})" title="Edit">&#9998;</button><button class="act-btn act-btn-red" onclick="deleteLead(${l.id})" title="Delete">&#128465;</button></td></tr>`;}).join('');
+}
+function renderReminders(){
+  const panel=document.getElementById('reminders-panel');if(!panel)return;
+  const ov=leads.filter(l=>l.followup&&isOv(l.followup)&&l.status!=='Converted'&&l.status!=='Lost'),td=leads.filter(l=>l.followup&&isDT(l.followup)&&l.status!=='Converted'&&l.status!=='Lost'),up=leads.filter(l=>l.followup&&!isOv(l.followup)&&!isDT(l.followup)&&l.status!=='Converted'&&l.status!=='Lost').sort((a,b)=>a.followup.localeCompare(b.followup));
+  const block=(title,items,color)=>!items.length?'':
+    `<div class="r-block"><div class="r-block-title" style="color:${color}"><span style="font-size:8px">&#9679;</span> ${title} (${items.length})</div>${items.map(l=>`<div class="r-item" onclick="openDetail(${l.id})"><div class="avatar ${avC(l.source)}" style="width:30px;height:30px;font-size:11px">${ini(l)}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--navy)">${l.fname} ${l.lname}</div><div style="font-size:11px;color:var(--gray-400)">${l.followupNote||'No note'} &middot; <strong>${l.followup}</strong></div></div><span class="badge ${SCLS[l.status]||''}">${l.status}</span></div>`).join('')}</div>`;
+  const empty=!ov.length&&!td.length&&!up.length;
+  panel.innerHTML=block('Overdue',ov,'var(--red)')+block('Due today',td,'var(--amber)')+block('Upcoming',up,'var(--blue)')+(empty?'<div class="empty-state"><div style="font-size:32px;margin-bottom:8px">&#10003;</div><div style="font-size:14px;font-weight:600;color:var(--gray-600);margin-bottom:4px">All clear</div><div style="font-size:12px">No follow-ups due. Edit any lead to add a reminder.</div></div>':'');
+}
+function renderSetup(){const vc=document.getElementById('value-config');if(!vc)return;vc.innerHTML=Object.entries(vals).map(([t,v])=>`<div class="val-row"><span class="val-lbl">${t}</span><span style="font-size:11px;color:var(--gray-400)">$</span><input class="val-input" type="number" value="${v}" onchange="updateVal('${t}',this.value)"></div>`).join('');}
+function updateVal(t,v){vals[t]=parseFloat(v)||0;save();}
+function toggleOD(id,v){const l=leads.find(x=>x.id===id);if(!l)return;l.od=v;addLog(l,v?'Entered in Open Dental':'Removed Open Dental flag');save();render();}
+function addLog(l,text){if(!l.log)l.log=[];l.log.push({ts:new Date().toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}),text});}
+function showTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+name).classList.add('active');}
+function autoFillValue(){const t=document.getElementById('f-treatment').value;const v=vals[t];if(v)document.getElementById('f-value').value=v;}
+function openAdd(){editId=null;document.getElementById('modal-title-text').textContent='New lead';clearForm();document.getElementById('add-modal').classList.add('open');}
+function openEdit(id){const l=leads.find(x=>x.id===id);if(!l)return;editId=id;document.getElementById('modal-title-text').textContent='Edit — '+l.fname+' '+l.lname;fillForm(l);document.getElementById('add-modal').classList.add('open');}
+function closeModal(){document.getElementById('add-modal').classList.remove('open');editId=null;}
+function clearForm(){['f-fname','f-lname','f-phone','f-email','f-referrer','f-followup','f-followup-note','f-notes','f-value'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('f-od').checked=false;}
+function fillForm(l){document.getElementById('f-fname').value=l.fname||'';document.getElementById('f-lname').value=l.lname||'';document.getElementById('f-phone').value=l.phone||'';document.getElementById('f-email').value=l.email||'';document.getElementById('f-source').value=l.source;document.getElementById('f-status').value=l.status;document.getElementById('f-treatment').value=l.treatment;document.getElementById('f-value').value=l.value||'';document.getElementById('f-referrer').value=l.referrer||'';document.getElementById('f-followup').value=l.followup||'';document.getElementById('f-followup-note').value=l.followupNote||'';document.getElementById('f-od').checked=!!l.od;document.getElementById('f-notes').value=l.notes||'';}
+function saveLead(){const fname=document.getElementById('f-fname').value.trim();if(!fname){alert('Please enter a first name.');return;}const existing=editId?leads.find(x=>x.id===editId):{};const l={id:editId||Date.now(),fname,lname:document.getElementById('f-lname').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),source:document.getElementById('f-source').value,status:document.getElementById('f-status').value,treatment:document.getElementById('f-treatment').value,value:parseFloat(document.getElementById('f-value').value)||vals[document.getElementById('f-treatment').value]||0,referrer:document.getElementById('f-referrer').value.trim(),followup:document.getElementById('f-followup').value,followupNote:document.getElementById('f-followup-note').value.trim(),od:document.getElementById('f-od').checked,notes:document.getElementById('f-notes').value.trim(),date:editId?existing.date||today():today(),log:existing.log||[]};addLog(l,editId?'Lead updated — status: '+l.status:'Lead created — source: '+l.source);if(editId){leads[leads.findIndex(x=>x.id===editId)]=l;}else leads.unshift(l);save();closeModal();render();}
+function deleteLead(id){if(!confirm('Remove this lead permanently?'))return;leads=leads.filter(l=>l.id!==id);save();render();}
+function openDetail(id){const l=leads.find(x=>x.id===id);if(!l)return;detailId=id;document.getElementById('detail-name').textContent=l.fname+' '+l.lname;document.querySelectorAll('.inner-tab')[0].click();renderDetailOverview(l);renderDetailActivity(l);renderDetailReminder(l);document.getElementById('detail-modal').classList.add('open');}
+function renderDetailOverview(l){document.getElementById('detail-overview').innerHTML=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px"><span class="badge ${SCLS[l.status]||''}" style="font-size:11px">${l.status}</span><span class="badge" style="background:${l.od?'var(--green-bg)':'var(--amber-bg)'};color:${l.od?'var(--green)':'var(--amber)'};font-size:11px">${l.od?'&#10003; In Open Dental':'Not in Open Dental'}</span>${l.value?`<span class="badge" style="background:var(--gold-pale);color:var(--amber);font-size:11px">${fmt$(l.value)}</span>`:''}</div><div class="detail-grid"><div><div class="dl">Phone</div><div class="dv">${l.phone||'&mdash;'}</div></div><div><div class="dl">Email</div><div class="dv" style="font-size:12px">${l.email||'&mdash;'}</div></div><div><div class="dl">Source</div><div class="dv">${l.source}</div></div><div><div class="dl">Treatment</div><div class="dv">${l.treatment}</div></div><div><div class="dl">Date added</div><div class="dv">${l.date}</div></div>${l.referrer?`<div><div class="dl">Referred by</div><div class="dv">${l.referrer}</div></div>`:''}</div>${l.notes?`<div style="margin-bottom:14px"><div class="dl" style="margin-bottom:4px">Notes</div><div style="font-size:12px;color:var(--gray-600);background:var(--gray-50);padding:8px 10px;border-radius:var(--radius)">${l.notes}</div></div>`:''}<div style="border-top:1px solid var(--gray-100);padding-top:12px"><div class="dl" style="margin-bottom:7px">Update status</div><div class="status-row">${['New','Contacted','Appointment scheduled','Converted','Lost'].map(s=>`<button class="btn btn-sm" style="${l.status===s?'background:var(--navy);color:#fff;border-color:var(--navy);':''}" onclick="updateStatus(${l.id},'${s}')">${s}</button>`).join('')}</div></div><div style="margin-top:12px"><label class="chk-row" style="cursor:pointer"><input type="checkbox" ${l.od?'checked':''} style="width:15px;height:15px;accent-color:var(--navy)" onchange="toggleOD(${l.id},this.checked)"><span style="font-size:13px">Entered in Open Dental</span></label></div>`;}
+function renderDetailActivity(l){const log=l.log||[];document.getElementById('detail-activity').innerHTML=`<div class="note-add"><input type="text" id="new-note-input" placeholder="Add a note about this lead&hellip;"><button class="btn btn-primary btn-sm" onclick="addNoteFromDetail(${l.id})">Add note</button></div>${[...log].reverse().map(e=>`<div class="note-row"><div class="note-ts">${e.ts}</div><div class="note-text">${e.text}</div></div>`).join('')||'<div style="font-size:12px;color:var(--gray-400);padding:12px 0">No activity yet.</div>'}`;}
+function renderDetailReminder(l){document.getElementById('detail-reminder').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px"><div class="field"><label>Follow-up date</label><input type="date" id="det-fu-date" value="${l.followup||''}" style="padding:8px 10px;font-size:13px;border-radius:var(--radius);border:1px solid var(--gray-200);background:var(--white);color:var(--gray-800);font-family:inherit;width:100%;outline:none"></div><div class="field"><label>Follow-up note</label><input type="text" id="det-fu-note" value="${l.followupNote||''}" placeholder="What to discuss&hellip;" style="padding:8px 10px;font-size:13px;border-radius:var(--radius);border:1px solid var(--gray-200);background:var(--white);color:var(--gray-800);font-family:inherit;width:100%;outline:none"></div></div><div style="display:flex;gap:8px"><button class="btn btn-primary" onclick="saveReminder(${l.id})">Save reminder</button>${l.followup?`<button class="btn btn-danger" onclick="clearReminder(${l.id})">Clear</button>`:''}</div>`;}
+function saveReminder(id){const l=leads.find(x=>x.id===id);if(!l)return;l.followup=document.getElementById('det-fu-date').value;l.followupNote=document.getElementById('det-fu-note').value;addLog(l,'Follow-up set for '+l.followup+(l.followupNote?' — '+l.followupNote:''));save();render();openDetail(id);}
+function clearReminder(id){const l=leads.find(x=>x.id===id);if(!l)return;l.followup='';l.followupNote='';addLog(l,'Follow-up cleared');save();render();openDetail(id);}
+function addNoteFromDetail(id){const inp=document.getElementById('new-note-input');if(!inp)return;const t=inp.value.trim();if(!t)return;const l=leads.find(x=>x.id===id);if(!l)return;addLog(l,t);save();render();openDetail(id);document.querySelectorAll('.inner-tab')[1].click();}
+function updateStatus(id,status){const l=leads.find(x=>x.id===id);if(!l)return;l.status=status;addLog(l,'Status updated to: '+status);save();render();openDetail(id);}
+function closeDetail(){document.getElementById('detail-modal').classList.remove('open');detailId=null;}
+function editFromDetail(){closeDetail();openEdit(detailId);}
+function deleteFromDetail(){if(!confirm('Remove this lead permanently?'))return;const id=detailId;closeDetail();leads=leads.filter(l=>l.id!==id);save();render();}
+function showDetailTab(name,el){document.querySelectorAll('.inner-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');['overview','activity','reminder'].forEach(t=>{const e=document.getElementById('detail-'+t);if(e)e.style.display=t===name?'block':'none';});}
+function exportCSV(){const h=['First name','Last name','Phone','Email','Source','Treatment','Status','Value','Open Dental','Follow-up date','Referred by','Notes','Date added'];const rows=leads.map(l=>[l.fname,l.lname,l.phone,l.email,l.source,l.treatment,l.status,l.value||'',l.od?'Yes':'No',l.followup||'',l.referrer,l.notes,l.date].map(v=>`"${String(v||'').replace(/"/g,'""')}"`).join(','));const csv=[h.join(','),...rows].join('\n');const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='prosthdent_leads_'+today()+'.csv';a.click();}
+load();
+</script>
+</body>
+</html>
