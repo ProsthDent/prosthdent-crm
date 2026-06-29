@@ -11,7 +11,7 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers, body: '' };
   }
 
- const sql = neon(postgresql://netlifydb_owner:npg_0ECn2YwayKzZ@ep-late-math-ajmuhzcv.c-3.us-east-2.db.netlify.com/netlifydb?sslmode=require);
+ const sql = neon('postgresql://netlifydb_owner:npg_0ECn2YwayKzZ@ep-late-math-ajmuhzcv.c-3.us-east-2.db.netlify.com/netlifydb?sslmode=require');
 
   await sql`CREATE TABLE IF NOT EXISTS leads (
     id SERIAL PRIMARY KEY,
