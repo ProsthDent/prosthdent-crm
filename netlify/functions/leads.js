@@ -11,7 +11,7 @@ exports.handler = async (event) => {
     return { statusCode: 200, headers, body: '' };
   }
 
-  const sql = neon(process.env.NETLIFY_DATABASE_URL);
+ const sql = neon(process.env.DATABASE_URL);
 
   await sql`CREATE TABLE IF NOT EXISTS leads (
     id SERIAL PRIMARY KEY,
